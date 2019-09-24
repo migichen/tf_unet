@@ -408,7 +408,11 @@ class Trainer(object):
 
         init = self._initialize(training_iters, output_path, restore, prediction_path)
 
-        with tf.Session() as sess:
+        # Fix cudnn issue
+        config = tf.ConfigProto()
+        config.gpu_options.allow_growth = True
+
+        with tf.Session(config=config) as sess:
             if write_graph:
                 tf.train.write_graph(sess.graph_def, output_path, "graph.pb", False)
 
